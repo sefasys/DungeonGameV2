@@ -67,6 +67,8 @@ void execute_command(Player *player, char *command, Room *allRooms[], int room_c
             } else {
                 printf("Please specify a filename to load.\n");
             }
+    }else if(strcmp(token, "list") == 0){
+         list_saved_files();
     }else {
         printf("Unknown command: %s\n", token);
     }
@@ -347,6 +349,34 @@ void load_game(Player *player, Room *allRooms[], int room_count, const char *fil
     fclose(file);
     printf("Game loaded successfully from %s.\n", filename);
 }
+void list_saved_files() {
+    DIR *dir = opendir(".");  
+    if (!dir) {
+        printf("Error: Could not open the current directory.\n");
+        return;
+    }
+
+    printf("Saved game files in the current directory:\n");
+
+    struct dirent *entry;
+    int count = 0; 
+
+    while ((entry = readdir(dir)) != NULL) {
+        // Yalnızca ".txt" uzantılı dosyaları listele
+        if (strstr(entry->d_name, ".txt") != NULL) {
+            printf(" - %s\n", entry->d_name);
+            count++;
+        }
+    }
+
+    if (count == 0) {
+        printf("No saved files found in the current directory.\n");
+    }
+
+    closedir(dir); 
+}
+
+
 
 
 
